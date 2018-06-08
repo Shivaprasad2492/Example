@@ -59,6 +59,18 @@ public class RESTController {
             return Category_Title+ " category added successfully.";
         }
     }
+    @PostMapping("/api/allUsers")
+    public Iterable<User> getAllUsers(@RequestParam String user_name, @RequestParam String password){
+        String passwordByUser = String.valueOf(userService.findUserPassword(user_name));
+        String roleByUser = String.valueOf(userService.findUserRole(user_name));
+        String sha256hex = Hashing.sha256()
+                .hashString(password, Charsets.US_ASCII)
+                .toString();
+        if ((passwordByUser.equalsIgnoreCase(sha256hex))&&(roleByUser.equalsIgnoreCase("admin"))) {
+            return userService.getAllUsers();
+        }
+        else return null;
+    }
 
     @PostMapping("/api/allUsers")
     public Iterable<User> getAllUsers(@RequestParam String user_name, @RequestParam String password){
